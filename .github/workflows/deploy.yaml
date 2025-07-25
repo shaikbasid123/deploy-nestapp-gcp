@@ -57,7 +57,7 @@ jobs:
       run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
 
     - name: Deploy backend to GKE
-      run: kubectl apply -f nestapp/app/k8s/backend.yaml
+      run: kubectl apply -f app/k8s/backend.yaml
 
     - name: Deploy frontend to GKE
-      run: kubectl apply -f nestapp/web/k8s/frontend.yaml
+      run: kubectl apply -f web/k8s/frontend.yaml
