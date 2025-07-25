@@ -38,13 +38,13 @@ jobs:
 
     - name: Build backend Docker image
       run: |
-        cd nestapp/app
+        cd /app
         docker build -t $BACKEND_IMAGE .
         docker push $BACKEND_IMAGE
 
     - name: Build frontend Docker image
       run: |
-        cd nestapp/web
+        cd /web
         docker build -t $FRONTEND_IMAGE .
         docker push $FRONTEND_IMAGE
     
