@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: angular-frontend
-          image: gcr.io/<YOUR_PROJECT_ID>/angular-frontend:latest
+          image: gcr.io/my-app-458011/angular-frontend:latest
           ports:
             - containerPort: 80
 ---
