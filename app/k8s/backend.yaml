@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: nest-backend
-          image: gcr.io/<YOUR_PROJECT_ID>/nest-backend:latest
+          image: gcr.io/my-app-458011/nest-backend:latest
           env:
             - name: DB_HOST
               value: "10.241.0.3"
