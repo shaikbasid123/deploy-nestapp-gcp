@@ -1,0 +1,63 @@
+name: Build and Deploy to GKE
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER_NAME }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE }}
+  BACKEND_IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/nest-backend:latest
+  FRONTEND_IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/angular-frontend:latest
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Authenticate to GCP
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin --quiet
+
+    - name: Configure Docker for GCR
+      run: gcloud auth configure-docker
+
+    - name: Build backend Docker image
+      run: |
+        cd nestapp/app
+        docker build -t $BACKEND_IMAGE .
+        docker push $BACKEND_IMAGE
+
+    - name: Build frontend Docker image
+      run: |
+        cd nestapp/web
+        docker build -t $FRONTEND_IMAGE .
+        docker push $FRONTEND_IMAGE
+    
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v4
+      with:
+        version: 'latest'
+
+    - name: Get GKE credentials
+      run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+
+    - name: Deploy backend to GKE
+      run: kubectl apply -f nestapp/app/k8s/backend.yaml
+
+    - name: Deploy frontend to GKE
+      run: kubectl apply -f nestapp/web/k8s/frontend.yaml
