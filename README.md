@@ -1,4 +1,4 @@
-# deploy-nestapp-gcp
+# Depolying Nestjs app in GCP
 
 I have created a simple NestJS application\
 It is running on my private external IP address in kubernetes cluster\
