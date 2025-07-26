@@ -37,6 +37,6 @@ Secret Management:
 
 Backup Strategy:
 
-We can able to perform Cloud SQL backups via Terraform\
+We can able to perform Cloud SQL backups via Terraform
 
 
